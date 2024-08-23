@@ -27,9 +27,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Run build
-      - name: Build the project
-        run: npm run build # Ensure you have a build script defined in your package.json
+     
 
       # Step 5: Run tests
       - name: Run tests
