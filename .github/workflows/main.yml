@@ -1,44 +1,29 @@
 name: Build
 
-on:
+on: 
   push:
-    branches:
-      - main
 
 jobs:
-  build:
-    name: Build and analyze
+  sonarqube:
+    name: SonarQube Scan
     runs-on: ubuntu-latest
-    
+
     steps:
-      # Step 1: Checkout the repository
-      - name: Check out code
-        uses: actions/checkout@v4
-        with: 
-          fetch-depth: 0  # Fetch all history for all branches and tags
-        
-      # Step 2: Set up Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '17' # Specify your Node.js version
+    - name: Checkout source code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
-      # Step 3: Install dependencies
-      - name: Install dependencies
-        run: npm install
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'  # Update to a more recent version
 
-      # Step 4: Run SonarQube analysis
-      - name: Run SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    - name: Install dependencies
+      run: npm install
 
-      # Optional Step 7: Quality Gate
-      # Uncomment the lines below if you want the workflow to fail when the quality gate is not met
-      # - name: Check Quality Gate status
-      #   uses: sonarsource/sonarqube-quality-gate-action@master
-      #   timeout-minutes: 5
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-   
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@v2  # Use a stable version
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
